@@ -3,6 +3,65 @@ const User = require('./models/user');
 const connectDB = require('./config/database');
 const app = express();
 
+app.use(express.json());
+
+app.post('/signup', async (req, res) => {
+  const user = new User(req.body);
+  try {
+    await user.save();
+    res.send('User added successfully');
+  } catch (err) {
+    res.status(400).send('Unable to register user');
+  }
+});
+
+app.get('/user', async (req, res) => {
+  try {
+    const user = await User.findOne({ emailId: req.body.emailId });
+    if (!user) {
+      res.status(404).send('User not found');
+    } else {
+      res.send(user);
+    }
+  } catch (error) {
+    res.status(400).send('Unable to get the user');
+  }
+});
+
+app.get('/feed', async (req, res) => {
+  try {
+    const users = await User.find({});
+    if (users.length) {
+      res.send(users);
+    } else {
+      res.status(404).send('Users not found');
+    }
+  } catch (error) {
+    res.status(400).send('Something went wrong');
+  }
+});
+
+app.delete('/user', async (req, res) => {
+  try {
+    const id = req.body._id;
+    await User.findByIdAndDelete(id);
+    res.send('User got deleted successfully');
+  } catch (error) {
+    res.status(400).send('Something went wrong');
+  }
+});
+
+app.patch('/user', async (req, res) => {
+  try {
+    const id = req.body._id;
+    const data = req.body;
+    const user = await User.findByIdAndUpdate(id, data);
+    res.send('User updated successfully');
+  } catch (error) {
+    res.status(400).send('something went wrong');
+  }
+});
+
 connectDB()
   .then(() => {
     console.log('Database connection is established');
@@ -11,18 +70,3 @@ connectDB()
   .catch((err) => {
     console.error('Problem connecting to the Database');
   });
-
-app.post('/signup', async (req, res) => {
-  const user = new User({
-    firstName: 'Sagar',
-    lastName: 'joga',
-    emailId: 'sagar@joga.com',
-    password: 'sagar@123',
-  });
-  try {
-    await user.save();
-    res.send('User added successfully');
-  } catch (err) {
-    res.status(400).send('Unable to register user');
-  }
-});

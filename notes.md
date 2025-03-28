@@ -24,3 +24,11 @@
 - get db connection string, use it to connect to the mongo server
 - listen to the server after connecting to the db
 - create schema and model
+- create some dummy users and save them (post,/signup)
+- use postman to make requests and handle the errors using try catch blocks
+- request.body gives undefined if logged in the console. So, use a middleware like express.json() to convert it to object form from json
+- (get,/user) filter by email
+- (get,/feed) fetch all the users
+- (delete,/user) using id
+- (patch,/user) using id
+- (patch, /user) using emailId
