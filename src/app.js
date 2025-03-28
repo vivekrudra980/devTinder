@@ -26,6 +26,24 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+app.post('/login', async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+    const user = await User.findOne({ emailId });
+    if (!user) {
+      throw new Error('Invalid credentials');
+    }
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (isValidPassword) {
+      res.send('Login Successful!!');
+    } else {
+      throw new Error('Invalid credentials');
+    }
+  } catch (error) {
+    res.status(400).send('Something went wrong' + error.message);
+  }
+});
+
 app.get('/user', async (req, res) => {
   try {
     const user = await User.findOne({ emailId: req.body.emailId });

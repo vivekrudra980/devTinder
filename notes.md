@@ -32,3 +32,8 @@
 - (delete,/user) using id
 - (patch,/user) using id
 - (patch, /user) using emailId
+- schema level validations and exploring options in schema
+- api level validations
+- using validator package
+- validating signup data and password hashing using bcrypt
+- /signin api and checking password to authenticate user
