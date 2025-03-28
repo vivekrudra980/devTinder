@@ -11,7 +11,7 @@ app.post('/signup', async (req, res) => {
     await user.save();
     res.send('User added successfully');
   } catch (err) {
-    res.status(400).send('Unable to register user');
+    res.status(400).send('Unable to register user ' + err.message);
   }
 });
 
