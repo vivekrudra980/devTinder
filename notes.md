@@ -1,0 +1,26 @@
+- create a repository
+- initialize with node init
+- explore node_modules, diff b/w package.json and package-lock.json
+- install express
+- diff b/w caret and tilde
+- create a server
+- listen on port 7777
+- write request handlers for different routes
+- install nodemon and update scripts in package.json
+- what are dependencies
+- what is the use of "-g" in npm installation
+- / route should always be at the end
+- order of the routes matters (specific should always be at the first and generic should be at the end ----means /movies/2 should come first and /movies should be at the end)
+- use method applies to all the requests irrespective of the method, to make them specific get, post, delete, patch, update methods are available, even if they are available if we use just "use" method, then it applies to all the methods so be aware of the order of the methods also. Always use use method at the end if at all to use it
+- use of regex in routes, use of ? + * () in routes, /a/ ,/.*fly$/
+- extracting query parameters using req.query
+- extracting path parameters using req.params
+- handling multiple routes
+- use of next() in route handling, having multiple functions in the callback function
+- use of err, next()
+- error handling
+- use of middlewares and its relation to next()
+- install mongoose
+- get db connection string, use it to connect to the mongo server
+- listen to the server after connecting to the db
+- create schema and model
