@@ -51,36 +51,6 @@ app.delete('/user', async (req, res) => {
   }
 });
 
-app.patch('/user', async (req, res) => {
-  try {
-    const id = req.body._id;
-    const data = req.body;
-    const ALLOWED_UPDATES = [
-      'firstName',
-      'lastName',
-      'password',
-      'gender',
-      'skills',
-      'photoUrl',
-      'about',
-    ];
-    const isUpdateAllowed = Object.keys(data).every((k) =>
-      ALLOWED_UPDATES.includes(k)
-    );
-    if (!isUpdateAllowed) {
-      throw new Error('Updating certain fields is not allowed');
-    }
-    const user = await User.findByIdAndUpdate(id, data, {
-      returnDocument: 'after',
-      runValidators: true,
-    });
-    console.log(user);
-    res.send('User updated successfully');
-  } catch (error) {
-    res.status(400).send('Update failed: ' + error.message);
-  }
-});
-
 connectDB()
   .then(() => {
     console.log('Database connection is established');
