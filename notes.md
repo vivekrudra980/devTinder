@@ -37,3 +37,8 @@
 - using validator package
 - validating signup data and password hashing using bcrypt
 - /signin api and checking password to authenticate user
+- /profile api and get user details
+- explore and implement jwt token and cookies
+- writing userAuth middleware to authorize the user
+- adding expiry to jwt and cookies
+- adding basic sendConnectionRequest api

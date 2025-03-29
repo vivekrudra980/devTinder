@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/user');
 const connectDB = require('./config/database');
 const { validateSignUpData } = require('./utils/validation');
-const { auth } = require('./middlewares/auth');
+const { userAuth } = require('./middlewares/auth');
 const app = express();
 
 app.use(express.json());
@@ -40,8 +40,10 @@ app.post('/login', async (req, res) => {
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (isValidPassword) {
       // generate jwt token
-      const token = await jwt.sign({ _id: user._id }, 'Vivek@devTinder');
-      res.cookie('token', token);
+      const token = await jwt.sign({ _id: user._id }, 'Vivek@devTinder', {
+        expiresIn: '1d',
+      });
+      res.cookie('token', token, { expires: new Date(Date.now() + 900000) });
       res.send('Login Successful!!');
     } else {
       throw new Error('Invalid credentials');
@@ -51,7 +53,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/profile', auth, async (req, res) => {
+app.get('/profile', userAuth, async (req, res) => {
   try {
     const user = req.user;
     res.send(user);
