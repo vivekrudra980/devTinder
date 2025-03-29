@@ -3,61 +3,17 @@ const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const User = require('./models/user');
 const connectDB = require('./config/database');
-const { validateSignUpData } = require('./utils/validation');
-const { userAuth } = require('./middlewares/auth');
+const authRouter = require('./routes/auth');
+const profileRouter = require('./routes/profile');
+const requestRouter = require('./routes/request');
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 
-app.post('/signup', async (req, res) => {
-  try {
-    //check for validations using validation helper functions
-    validateSignUpData(req.body);
-    const { firstName, lastName, emailId, password } = req.body;
-    const passwordHash = await bcrypt.hash(password, 10);
-    const user = new User({
-      firstName,
-      lastName,
-      emailId,
-      password: passwordHash,
-    });
-    await user.save();
-    res.send('User added successfully');
-  } catch (err) {
-    res.status(400).send('Unable to register user ' + err.message);
-  }
-});
-
-app.post('/login', async (req, res) => {
-  try {
-    const { emailId, password } = req.body;
-    const user = await User.findOne({ emailId });
-    if (!user) {
-      throw new Error('Invalid credentials');
-    }
-    const isValidPassword = await user.validatePassword(password);
-    if (isValidPassword) {
-      // generate jwt token
-      const token = await user.getJWT();
-      res.cookie('token', token, { expires: new Date(Date.now() + 900000) });
-      res.send('Login Successful!!');
-    } else {
-      throw new Error('Invalid credentials');
-    }
-  } catch (error) {
-    res.status(400).send('Something went wrong' + error.message);
-  }
-});
-
-app.get('/profile', userAuth, async (req, res) => {
-  try {
-    const user = req.user;
-    res.send(user);
-  } catch (error) {
-    res.status(400).send('Something went wrong ' + error.message);
-  }
-});
+app.use('/', authRouter);
+app.use('/', profileRouter);
+app.use('/', requestRouter);
 
 app.get('/user', async (req, res) => {
   try {
@@ -122,15 +78,6 @@ app.patch('/user', async (req, res) => {
     res.send('User updated successfully');
   } catch (error) {
     res.status(400).send('Update failed: ' + error.message);
-  }
-});
-
-app.get('/sendConnectionRequest', userAuth, (req, res) => {
-  try {
-    console.log(req.user.firstName + ' sent a request to you');
-    res.send(req.user.firstName + ' sent a request to you');
-  } catch (error) {
-    res.status(400).send('Error: ' + error.message);
   }
 });
 
