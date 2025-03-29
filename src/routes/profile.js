@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const validator = require('validator');
 const { userAuth } = require('../middlewares/auth');
 const profileRouter = express.Router();
 
@@ -47,6 +48,9 @@ profileRouter.patch('/profile/password', userAuth, async (req, res) => {
     const isValidPassword = await bcrypt.compare(oldPassword, user.password);
     if (!isValidPassword) {
       throw new Error('Old password is incorrect');
+    }
+    if (!validator.isStrongPassword(newPassword)) {
+      throw new Error('Weak password, try a strong one');
     }
     const passwordHash = await bcrypt.hash(newPassword, 10);
     user.password = passwordHash;
