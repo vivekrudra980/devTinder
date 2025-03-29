@@ -42,3 +42,4 @@
 - writing userAuth middleware to authorize the user
 - adding expiry to jwt and cookies
 - adding basic sendConnectionRequest api
+- refactoring the code by offloading generate jwt and validating passwords to schema methods
