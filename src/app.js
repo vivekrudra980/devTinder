@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/user');
 const connectDB = require('./config/database');
 const { validateSignUpData } = require('./utils/validation');
+const { auth } = require('./middlewares/auth');
 const app = express();
 
 app.use(express.json());
@@ -50,20 +51,10 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/profile', async (req, res) => {
+app.get('/profile', auth, async (req, res) => {
   try {
-    const { token } = req.cookies;
-    if (!token) {
-      throw new Error('Invalid Token');
-    }
-    const decodedCookie = await jwt.verify(token, 'Vivek@devTinder');
-    const _id = decodedCookie._id;
-    const user = await User.findById(_id);
-    if (!user) {
-      throw new Error('No user found');
-    } else {
-      res.send(user);
-    }
+    const user = req.user;
+    res.send(user);
   } catch (error) {
     res.status(400).send('Something went wrong ' + error.message);
   }
