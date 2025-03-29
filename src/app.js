@@ -128,6 +128,15 @@ app.patch('/user', async (req, res) => {
   }
 });
 
+app.get('/sendConnectionRequest', userAuth, (req, res) => {
+  try {
+    console.log(req.user.firstName + ' sent a request to you');
+    res.send(req.user.firstName + ' sent a request to you');
+  } catch (error) {
+    res.status(400).send('Error: ' + error.message);
+  }
+});
+
 connectDB()
   .then(() => {
     console.log('Database connection is established');
